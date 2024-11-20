@@ -1,0 +1,18 @@
+{
+  "name": "vscan",
+  "version": "1.0.0",
+  "description": "A AIML project where we create a software that scans virus on the system.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "Shivesh",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.2.0"
+  },
+  "dependencies": {
+    "vscan": "file:"
+  }
+}
