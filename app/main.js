@@ -11,9 +11,9 @@ app.on('ready', () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-    },
+    }
   });
-
+  mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile('index.html');
 });
 
