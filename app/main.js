@@ -17,7 +17,31 @@ app.on('ready', () => {
   mainWindow.loadFile('index.html');
 });
 
-// Browse for directory
+// Function to get all files recursively
+const getAllFiles = (dirPath, arrayOfFiles = []) => {
+  try {
+    const files = fs.readdirSync(dirPath);
+
+    files.forEach(file => {
+      const fullPath = path.join(dirPath, file);
+      try {
+        if (fs.statSync(fullPath).isDirectory()) {
+          arrayOfFiles = getAllFiles(fullPath, arrayOfFiles); // Recurse into subdirectory
+        } else {
+          arrayOfFiles.push(fullPath); // Add file to array
+        }
+      } catch (error) {
+        console.warn(`Skipping file/directory: ${fullPath}`); // Handle permission or access errors gracefully
+      }
+    });
+  } catch (error) {
+    console.warn(`Skipping directory: ${dirPath}`); // Handle top-level directory errors gracefully
+  }
+
+  return arrayOfFiles;
+};
+
+// IPC handler for browsing directory
 ipcMain.handle('browse-directory', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ['openDirectory'],
@@ -26,26 +50,10 @@ ipcMain.handle('browse-directory', async () => {
   return result.filePaths[0]; // Return the selected directory path
 });
 
-// Recursive function to get all files
-const getAllFiles = (dirPath, arrayOfFiles = []) => {
-  const files = fs.readdirSync(dirPath);
-
-  files.forEach(file => {
-    const fullPath = path.join(dirPath, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      arrayOfFiles = getAllFiles(fullPath, arrayOfFiles); // Recurse into subdirectory
-    } else {
-      arrayOfFiles.push(fullPath); // Add file to array
-    }
-  });
-
-  return arrayOfFiles;
-};
-
-// Start scanning
+// IPC handler for starting the scan
 ipcMain.handle('start-scanning', async (event, directoryPath) => {
   if (!fs.existsSync(directoryPath)) {
-    return { error: 'Directory not found!' };
+    return { error: `Directory not found: ${directoryPath}` };
   }
 
   const allFiles = getAllFiles(directoryPath); // Get all files recursively
