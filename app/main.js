@@ -68,18 +68,15 @@ function loadMalwareDetectionModel(modelPath) {
   console.log(`Model loaded successfully from ${modelPath}`);
 }
 
-// Fake model inference
+// model inference
 function analyzeFileWithModel(filePath) {
   console.log(`Analyzing file: ${filePath}`);
   
   // "model" processing logic
   const fileContent = readFileContent(filePath); // Read file content
   // detection result
-  const isMalware = fileContent.endsWith("A"); 
-  return {
-    filePath,
-    result: isMalware ? "malware" : "clean",
-  };
+  const isMalware = fileContent.endsWith("A");
+  return performScan(fileContent)
 }
 
 // Simulate reading file content
@@ -87,17 +84,11 @@ function readFileContent(filePath) {
   try {
     const fileExtension = path.extname(filePath);
     console.log(`Reading file with extension: ${fileExtension}`);
-    return `Fake content of ${filePath}`; // Dummy content
+    return `content of ${filePath}`; //  content
   } catch (error) {
     console.error(`Failed to read file: ${error.message}`);
     return "";
   }
-}
-
-function generateFakeHash(content) {
-  const hashValue = Math.random().toString(36).substring(2, 8).toUpperCase();
-  console.log(`Generated hash: ${hashValue}`);
-  return hashValue;
 }
 
 function performScan(files) {
