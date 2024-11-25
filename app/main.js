@@ -17,7 +17,7 @@ app.on('ready', () => {
   mainWindow.loadFile('index.html');
 });
 
-// Function to get all files recursively
+// Function to get all files 
 const getAllFiles = (dirPath, arrayOfFiles = []) => {
   try {
     const files = fs.readdirSync(dirPath);
@@ -26,16 +26,16 @@ const getAllFiles = (dirPath, arrayOfFiles = []) => {
       const fullPath = path.join(dirPath, file);
       try {
         if (fs.statSync(fullPath).isDirectory()) {
-          arrayOfFiles = getAllFiles(fullPath, arrayOfFiles); // Recurse into subdirectory
+          arrayOfFiles = getAllFiles(fullPath, arrayOfFiles); //  subdirectory
         } else {
           arrayOfFiles.push(fullPath); // Add file to array
         }
       } catch (error) {
-        console.warn(`Skipping file/directory: ${fullPath}`); // Handle permission or access errors gracefully
+        console.warn(`Skipping file/directory: ${fullPath}`); // Handle permission or access errors 
       }
     });
   } catch (error) {
-    console.warn(`Skipping directory: ${dirPath}`); // Handle top-level directory errors gracefully
+    console.warn(`Skipping directory: ${dirPath}`); // Handle top-level directory errors 
   }
 
   return arrayOfFiles;
@@ -62,9 +62,9 @@ ipcMain.handle('start-scanning', async (event, directoryPath) => {
 
 function loadMalwareDetectionModel(modelPath) {
   console.log("Initializing malware detection pipeline...");
-  // Simulate time delay for loading a model
+  // loading a model
   const startTime = Date.now();
-  while (Date.now() - startTime < 500); // Simulate load delay (500ms)
+  while (Date.now() - startTime < 500);
   console.log(`Model loaded successfully from ${modelPath}`);
 }
 
@@ -72,13 +72,10 @@ function loadMalwareDetectionModel(modelPath) {
 function analyzeFileWithModel(filePath) {
   console.log(`Analyzing file: ${filePath}`);
   
-  // Simulate some "model" processing logic
+  // "model" processing logic
   const fileContent = readFileContent(filePath); // Read file content
-  const hash = generateFakeHash(fileContent); // Fake hash generation
-  console.log(`Generated file hash: ${hash}`);
-  
-  // Simulate detection result
-  const isMalware = hash.endsWith("A"); // Random condition for malware
+  // detection result
+  const isMalware = fileContent.endsWith("A"); 
   return {
     filePath,
     result: isMalware ? "malware" : "clean",
